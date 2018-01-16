@@ -176,6 +176,11 @@ return [
          * Auth Module Service Providers ...
          */
         Minix\Auth\Providers\AuthServiceProvider::class,
+
+        /*
+         * Exchange Module Service Providers ...
+         */
+        Minix\Exchange\Providers\ExchangeServiceProvider::class,
     ],
 
     /*
