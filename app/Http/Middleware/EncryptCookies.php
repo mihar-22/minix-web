@@ -3,7 +3,7 @@
 namespace Minix\Http\Middleware;
 
 use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
-use Minix\Auth\OAuth;
+use Minix\Auth\OAuth\Cookie;
 
 class EncryptCookies extends Middleware
 {
@@ -16,9 +16,9 @@ class EncryptCookies extends Middleware
         /*
          * Encrypted on creation and decrypted by token guard.
          *
-         * @see \Minix\Auth\OAuthCookieFactory
+         * @see \Minix\Auth\OAuth\CookieFactory
          * @see \Laravel\Passport\Guards\TokenGuard
          */
-        OAuth::ACCESS_TOKEN_COOKIE,
+        Cookie::ACCESS_TOKEN,
     ];
 }

@@ -7,21 +7,29 @@ use JsonSerializable;
 class Error implements JsonSerializable
 {
     /**
+     * Machine identifier.
+     *
      * @var string
      */
     public $id;
 
     /**
+     * Human description.
+     *
      * @var string|null
      */
     public $message;
 
     /**
+     * Extra information to help narrow the cause of the error.
+     *
      * @var string|null
      */
     public $hint;
 
     /**
+     * If more than one error occurred, they are listed here.
+     *
      * @var array|null
      */
     public $errors;

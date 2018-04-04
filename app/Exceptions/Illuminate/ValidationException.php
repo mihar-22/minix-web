@@ -8,19 +8,14 @@ use Minix\Http\Errors\Error;
 
 class ValidationException extends BaseException
 {
+    protected $statusCode = 422;
+
     /**
      * The previous exception.
      *
      * @param IlluminateException
      */
     protected $previous;
-
-    /**
-     * The HTTP status code.
-     *
-     * @var int
-     */
-    protected $statusCode = 422;
 
     /**
      * @param IlluminateException $previous
@@ -32,9 +27,6 @@ class ValidationException extends BaseException
         parent::__construct();
     }
 
-    /**
-     * @return Error
-     */
     public function toError()
     {
         return new Error(

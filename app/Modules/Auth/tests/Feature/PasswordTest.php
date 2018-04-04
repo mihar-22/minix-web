@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Minix\Auth\Models\User;
-use Minix\Auth\PasswordBroker;
+use Minix\Auth\Password\PasswordBroker;
 use Tests\MailTrap;
 use Tests\TestCase;
 

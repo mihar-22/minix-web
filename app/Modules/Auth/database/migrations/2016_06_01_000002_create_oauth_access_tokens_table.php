@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateOauthAccessTokensTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('oauth_access_tokens', function (Blueprint $table) {
@@ -23,9 +20,6 @@ class CreateOauthAccessTokensTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::drop('oauth_access_tokens');

@@ -1,12 +1,12 @@
 <?php
 
-namespace Minix\Auth;
+namespace Minix\Auth\OAuth;
 
 use Carbon\Carbon;
 use Laravel\Passport\ApiTokenCookieFactory;
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie as HttpCookie;
 
-class OAuthCookieFactory extends ApiTokenCookieFactory
+class CookieFactory extends ApiTokenCookieFactory
 {
     /**
      * Create a new access token cookie.
@@ -14,7 +14,7 @@ class OAuthCookieFactory extends ApiTokenCookieFactory
      * @param mixed  $userId
      * @param string $csrfToken
      *
-     * @return Cookie
+     * @return HttpCookie
      */
     public function makeAccessTokenCookie($userId, $csrfToken)
     {
@@ -22,8 +22,8 @@ class OAuthCookieFactory extends ApiTokenCookieFactory
 
         $expiration = Carbon::now()->addMinutes($config['lifetime']);
 
-        return new Cookie(
-            OAuth::ACCESS_TOKEN_COOKIE,
+        return new HttpCookie(
+            Cookie::ACCESS_TOKEN,
             $this->encrypter->encrypt($this->createToken($userId, $csrfToken, $expiration)),
             $expiration,
             $config['path'],
@@ -38,7 +38,7 @@ class OAuthCookieFactory extends ApiTokenCookieFactory
      *
      * @param string $refreshToken
      *
-     * @return Cookie
+     * @return HttpCookie
      */
     public function makeRefreshTokenCookie($refreshToken)
     {
@@ -46,8 +46,8 @@ class OAuthCookieFactory extends ApiTokenCookieFactory
 
         $expiration = Carbon::now()->addMinutes($config['expire']);
 
-        return new Cookie(
-            OAuth::REFRESH_TOKEN_COOKIE,
+        return new HttpCookie(
+            Cookie::REFRESH_TOKEN,
             $refreshToken,
             $expiration,
             null,

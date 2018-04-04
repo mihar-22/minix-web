@@ -64,6 +64,7 @@ return array(
 
     'model_locations' => array(
         'app/Modules/Auth/src/Models/',
+        'app/Modules/Exchange/src/Models/',
     ),
 
 

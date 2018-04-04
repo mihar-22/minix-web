@@ -23,9 +23,6 @@ class AuthServiceProvider extends ServiceProvider
         Passport::ignoreMigrations();
     }
 
-    /**
-     * Register Laravel Passport routes and token expiration.
-     */
     public function registerLaravelPassport()
     {
         Passport::routes(function ($router) {

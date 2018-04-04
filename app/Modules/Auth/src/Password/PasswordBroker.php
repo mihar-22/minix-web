@@ -1,8 +1,9 @@
 <?php
 
-namespace Minix\Auth;
+namespace Minix\Auth\Password;
 
 use Carbon\Carbon;
+use Database\Table;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class PasswordBroker
      *
      * @var string
      */
-    static $table = 'password_resets';
+    static $table = Table::PASSWORD_RESETS;
 
     /**
      * Creates the password reset record in the database and sends the reset link to the user's

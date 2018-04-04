@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Minix\Auth\Http\Requests\ResetPassword as ResetPasswordRequest;
 use Minix\Auth\Http\Requests\SendPasswordResetLink as SendPasswordResetLinkRequest;
 use Minix\Auth\Models\User;
-use Minix\Auth\PasswordBroker;
+use Minix\Auth\Password\PasswordBroker;
 use Minix\Http\Controllers\Controller;
 
 class PasswordController extends Controller

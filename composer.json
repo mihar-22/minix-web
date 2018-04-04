@@ -24,6 +24,7 @@
       "app/Modules/Exchange/database/seeds"
     ],
     "psr-4": {
+      "Database\\": "database/",
       "Minix\\": "app/",
       "Minix\\Auth\\": "app/Modules/Auth/src",
       "Minix\\Uuid\\": "app/Modules/Uuid/src",
@@ -34,7 +35,8 @@
     "psr-4": {
       "Tests\\": "tests/",
       "Minix\\Auth\\Tests\\": "app/Modules/Auth/tests/",
-      "Minix\\Exchange\\Tests\\": "app/Modules/Exchange/tests/"
+      "Minix\\Exchange\\Tests\\": "app/Modules/Exchange/tests/",
+      "Minix\\Support\\Tests\\": "app/Support/tests/"
     }
   },
   "extra": {

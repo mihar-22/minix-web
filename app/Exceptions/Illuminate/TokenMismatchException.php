@@ -8,19 +8,14 @@ use Minix\Http\Errors\Error;
 
 class TokenMismatchException extends BaseException
 {
+    protected $statusCode = 419;
+
     /**
      * The previous exception.
      *
      * @var IlluminateException
      */
     protected $previous;
-
-    /**
-     * The HTTP status code.
-     *
-     * @var int
-     */
-    protected $statusCode = 419;
 
     /**
      * @param IlluminateException $previous
@@ -32,9 +27,6 @@ class TokenMismatchException extends BaseException
         parent::__construct();
     }
 
-    /**
-     * @return Error
-     */
     public function toError()
     {
         return new Error('csrf_token_invalid', $this->previous->getMessage());

@@ -8,19 +8,14 @@ use Minix\Http\Errors\Error;
 
 class AuthenticationException extends BaseException
 {
+    protected $statusCode = 401;
+
     /**
      * The previous exception.
      *
      * @var IlluminateException
      */
     protected $previous;
-
-    /**
-     * The HTTP status code.
-     *
-     * @var int
-     */
-    protected $statusCode = 401;
 
     /**
      * @param IlluminateException $previous
@@ -32,9 +27,6 @@ class AuthenticationException extends BaseException
         parent::__construct();
     }
 
-    /**
-     * @return Error
-     */
     public function toError()
     {
         return new Error('unauthenticated', $this->previous->getMessage());

@@ -8,19 +8,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as IlluminateEx
 
 class NotFoundHttpException extends BaseException
 {
+    protected $statusCode = 404;
+
     /**
      * The previous exception.
      *
      * @var IlluminateException
      */
     protected $previous;
-
-    /**
-     * The HTTP status code.
-     *
-     * @var int
-     */
-    protected $statusCode = 404;
 
     /**
      * @param IlluminateException $previous
@@ -32,9 +27,6 @@ class NotFoundHttpException extends BaseException
         parent::__construct();
     }
 
-    /**
-     * @return Error
-     */
     public function toError()
     {
         return new Error(

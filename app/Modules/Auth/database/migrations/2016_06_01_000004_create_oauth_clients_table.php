@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateOauthClientsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('oauth_clients', function (Blueprint $table) {
@@ -24,9 +21,6 @@ class CreateOauthClientsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::drop('oauth_clients');

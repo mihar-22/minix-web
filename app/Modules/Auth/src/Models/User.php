@@ -3,50 +3,39 @@
 namespace Minix\Auth\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Minix\Exchange\Models\ExchangeKey;
+use Minix\Exchange\Models\Order;
 use Minix\Uuid\Uuid;
 
-
 /**
- * User Eloquent Model
- *
- * @property string $id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property string                        $id
+ * @property string                        $name
+ * @property string                        $email
+ * @property string                        $password
+ * @property Carbon                        $created_at
+ * @property Carbon                        $updated_at
+ * @property-read Collection|ExchangeKey[] $exchangeKeys
+ * @property-read Collection|Order[]       $orders
  */
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    /**
-     * Indicates if the ids are auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
     ];
@@ -66,5 +55,21 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+
+    /**
+     * @return HasMany|ExchangeKey
+     */
+    public function exchangeKeys()
+    {
+        return $this->hasMany(ExchangeKey::class);
+    }
+
+    /**
+     * @return HasManyThrough|Order[]
+     */
+    public function orders()
+    {
+        return $this->hasManyThrough(Order::class, ExchangeKey::class);
     }
 }

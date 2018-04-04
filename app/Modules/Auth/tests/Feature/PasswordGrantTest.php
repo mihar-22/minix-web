@@ -7,7 +7,8 @@ use Illuminate\Foundation\Testing\TestResponse;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Minix\Auth\Models\User;
-use Minix\Auth\OAuth;
+use Minix\Auth\OAuth\Cookie as OAuthCookie;
+use Minix\Auth\OAuth\Parameter;
 use Symfony\Component\HttpFoundation\Cookie;
 use Tests\TestCase;
 
@@ -46,9 +47,9 @@ class PasswordGrantTest extends TestCase
     /** @test */
     public function i_can_refresh_my_access_token_using_parameters()
     {
-        $refreshToken = $this->getNewToken(OAuth::REFRESH_TOKEN_PARAM);
+        $refreshToken = $this->getNewToken(Parameter::REFRESH_TOKEN);
 
-        $response = $this->requestTokenRefresh([OAuth::REFRESH_TOKEN_PARAM => $refreshToken]);
+        $response = $this->requestTokenRefresh([Parameter::REFRESH_TOKEN => $refreshToken]);
 
         $this->assertValidNewTokenResponse($response);
     }
@@ -56,9 +57,9 @@ class PasswordGrantTest extends TestCase
     /** @test */
     public function i_can_refresh_my_access_token_using_cookies()
     {
-        $refreshToken = $this->getNewTokenCookie(OAuth::REFRESH_TOKEN_COOKIE);
+        $refreshToken = $this->getNewTokenCookie(OAuthCookie::REFRESH_TOKEN);
 
-        $response = $this->requestTokenRefresh([], [OAuth::REFRESH_TOKEN_COOKIE => $refreshToken]);
+        $response = $this->requestTokenRefresh([], [OAuthCookie::REFRESH_TOKEN => $refreshToken]);
 
         $this->assertValidNewTokenResponse($response);
     }
@@ -103,8 +104,8 @@ class PasswordGrantTest extends TestCase
     private function getUserCredentials()
     {
         return [
-            OAuth::USERNAME_PARAM => $this->user->email,
-            OAuth::PASSWORD_PARAM => 'secret',
+            Parameter::USERNAME => $this->user->email,
+            Parameter::PASSWORD => 'secret',
         ];
     }
 
@@ -144,10 +145,10 @@ class PasswordGrantTest extends TestCase
     private function assertValidNewTokenResponse($response)
     {
         $response->assertStatus(200)
-            ->assertCookie(OAuth::ACCESS_TOKEN_COOKIE)
-            ->assertCookie(OAuth::REFRESH_TOKEN_COOKIE)
+            ->assertCookie(OAuthCookie::ACCESS_TOKEN)
+            ->assertCookie(OAuthCookie::REFRESH_TOKEN)
             ->assertJson(['token_type' => 'Bearer'])
-            ->assertSee(OAuth::ACCESS_TOKEN_PARAM)
-            ->assertSee(OAuth::REFRESH_TOKEN_PARAM);
+            ->assertSee(Parameter::ACCESS_TOKEN)
+            ->assertSee(Parameter::REFRESH_TOKEN);
     }
 }

@@ -6,7 +6,11 @@ use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
-use Minix\Auth\OAuth;
+use Minix\Auth\OAuth\Cookie;
+use Minix\Auth\OAuth\CookieFactory;
+use Minix\Auth\OAuth\Grant;
+use Minix\Auth\OAuth\Parameter;
+use Minix\Auth\OAuth\Repository;
 use Minix\Http\Controllers\Controller;
 
 class PasswordGrantController extends Controller
@@ -18,7 +22,7 @@ class PasswordGrantController extends Controller
     |
     | This controller issues access tokens to first party applications using a password grant.
     | This is for applications that cannot securely store their client_id and client_secret. It
-    | proxies requests to its respective oauth route and injects the client_id and client_secret.
+    | proxies requests to its respective repository route and injects the client_id and client_secret.
     |
     */
 
@@ -33,20 +37,31 @@ class PasswordGrantController extends Controller
     private $cookies;
 
     /**
-     * @var OAuth;
+     * @var CookieFactory
      */
-    private $oauth;
+    private $cookieFactory;
 
     /**
-     * @param Router    $router
-     * @param CookieJar $cookies
-     * @param OAuth     $oauth
+     * @var Repository;
      */
-    public function __construct(Router $router, CookieJar $cookies, OAuth $oauth)
-    {
+    private $repository;
+
+    /**
+     * @param Router        $router
+     * @param CookieJar     $cookies
+     * @param CookieFactory $cookieFactory
+     * @param Repository    $repository
+     */
+    public function __construct(
+        Router $router,
+        CookieJar $cookies,
+        CookieFactory $cookieFactory,
+        Repository $repository
+    ) {
         $this->router = $router;
         $this->cookies = $cookies;
-        $this->oauth = $oauth;
+        $this->cookieFactory = $cookieFactory;
+        $this->repository = $repository;
     }
 
     /**
@@ -58,9 +73,9 @@ class PasswordGrantController extends Controller
      */
     protected function issueToken(Request $request)
     {
-        $data = $request->only(OAuth::USERNAME_PARAM, OAuth::PASSWORD_PARAM);
+        $data = $request->only(Parameter::USERNAME, Parameter::PASSWORD);
 
-        return $this->proxy($request, OAuth::PASSWORD_GRANT, $data);
+        return $this->proxy($request, Grant::PASSWORD, $data);
     }
 
     /**
@@ -72,16 +87,17 @@ class PasswordGrantController extends Controller
      */
     protected function refreshToken(Request $request)
     {
-        $refreshToken = $request->input(OAuth::REFRESH_TOKEN_PARAM) ??
-            $request->cookie(OAuth::REFRESH_TOKEN_COOKIE);
+        $refreshToken =
+            $request->input(Parameter::REFRESH_TOKEN) ??
+            $request->cookie(Cookie::REFRESH_TOKEN);
 
-        $data = [OAuth::REFRESH_TOKEN_PARAM => $refreshToken];
+        $data = [Parameter::REFRESH_TOKEN => $refreshToken];
 
-        return $this->proxy($request, OAuth::REFRESH_GRANT, $data);
+        return $this->proxy($request, Grant::REFRESH, $data);
     }
 
     /**
-     * Proxy the request to the oauth server.
+     * Proxy the request to the repository server.
      *
      * @param Request $request
      * @param string  $grantType
@@ -111,7 +127,7 @@ class PasswordGrantController extends Controller
      */
     private function dispatchRequestToAuthServer(Request $request, $grantType, $data)
     {
-        $client = $this->oauth->getPasswordGrantClient();
+        $client = $this->repository->getPasswordGrantClient();
 
         $request->request->replace(array_merge([
             'grant_type' => $grantType,
@@ -126,7 +142,7 @@ class PasswordGrantController extends Controller
     }
 
     /**
-     * Create oauth cookies from the authorization response and attach it.
+     * Create repository cookies from the authorization response and attach it.
      *
      * @param Response $response
      * @param string   $csrfToken
@@ -138,11 +154,11 @@ class PasswordGrantController extends Controller
         $data = json_decode($response->getContent());
 
         return $response
-            ->withCookie($this->oauth->cookieFactory->makeAccessTokenCookie(
-                $this->oauth->findUserWithAccessToken($data->access_token)->getKey(),
+            ->withCookie($this->cookieFactory->makeAccessTokenCookie(
+                $this->repository->findUserWithAccessToken($data->access_token)->getKey(),
                 $csrfToken
             ))
-            ->withCookie($this->oauth->cookieFactory->makeRefreshTokenCookie(
+            ->withCookie($this->cookieFactory->makeRefreshTokenCookie(
                 $data->refresh_token
             ));
     }

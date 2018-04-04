@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateOauthAuthCodesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('oauth_auth_codes', function (Blueprint $table) {
@@ -21,9 +18,6 @@ class CreateOauthAuthCodesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::drop('oauth_auth_codes');
